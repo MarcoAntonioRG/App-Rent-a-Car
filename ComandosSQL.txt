@@ -1,0 +1,55 @@
+# Crear base de datos
+CREATE DATABASE apprentacar_db;
+
+#Crear tabla admin
+CREATE TABLE admin (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(40), 
+    Contrasenia VARCHAR(40)
+);
+
+# Insertar filas en admin
+INSERT INTO admin (Nombre, Contrasenia) VALUES ('Marco', 'password');
+
+#Crear tabla vehiculo
+CREATE TABLE vehiculo (
+    ID INT AUTO_INCREMENT PRIMARY KEY, 
+    Nombre VARCHAR(40), 
+    Tarifa INT, 
+    Categoria VARCHAR(20), 
+    Color VARCHAR(10), 
+    Transmision VARCHAR(10), 
+    Combustible VARCHAR(10), 
+    Puertas INT,
+    Capacidad INT, 
+    Cilindrada VARCHAR(20), 
+    Patente VARCHAR(10), 
+    Disponibilidad VARCHAR(20),
+    KM INT, 
+    Marca VARCHAR(20), 
+    Anio INT
+);
+
+# Insertar filas en vehiculo
+INSERT INTO vehiculo (
+    Nombre, Tarifa, Categoria, Color, Transmision, Combustible, Puertas, 
+    Capacidad, Cilindrada, Patente, Disponibilidad, KM, Marca, Anio)
+VALUES 
+    ("Kia Rio", "30000", "Sedan", "Azul", "Manual", "Gasolina", 4, 6, "1300cc", "TV8197", "Disponible", 200000, "Kia", 2000),
+    ('Nissan Versa', 30000, 'Sedan', 'Gris', 'Manual', 'Gasolina', 4, 5, '1600cc', 'XYZ789', 'Disponible', 70000, 'Nissan', 2019),
+    ('Ford Ranger', 45000, 'Pickup', 'Azul', 'Automática', 'Diesel', 4, 5, '2500cc', 'JKL456', 'No Disponible', 80000, 'Ford', 2021),
+    ('Honda Civic', 38000, 'Sedan', 'Negro', 'Manual', 'Gasolina', 4, 5, '2000cc', 'LMN987', 'Disponible', 40000, 'Honda', 2022)
+;
+
+#Crear tabla cliente
+CREATE TABLE cliente (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(40), 
+    Edad INT, 
+    Deuda INT, 
+    FechaDevolucion DATE, 
+    ID_Vehiculo INT,
+    FOREIGN KEY (ID_Vehiculo) REFERENCES vehiculo(ID) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
+);

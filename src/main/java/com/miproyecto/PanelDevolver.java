@@ -1,0 +1,323 @@
+package com.miproyecto;
+
+/*
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+* Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+*/
+
+/**
+ *
+ * @author Marco Román
+ */
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+public class PanelDevolver extends javax.swing.JPanel {
+    
+    private final DefaultTableModel modelo;
+
+    /**
+     * Creates new form PanelDevolver
+    */
+    public PanelDevolver() {
+        initComponents();
+        jTextField2.setText("$");
+        modelo = (DefaultTableModel)jTable2.getModel();
+        cargarClientes();
+    }
+    
+    private void buscarPedido(int id) {
+        String sql = "SELECT c.ID, c.`Nombre`, c.`Edad`, c.`Deuda`, c.`FechaDevolucion`, v.`Nombre` "
+                + "as Vehículo FROM cliente c INNER JOIN vehiculo v on c.`ID_Vehiculo`=v.id WHERE c.ID = "+id;
+        
+        try {
+            PreparedStatement pst = VentanaLogin.con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            modelo.setRowCount(0);
+            while (rs.next()) {                
+                modelo.addRow(new String[]{rs.getString(1), rs.getString(2), rs.getString(3),
+                rs.getString(4),rs.getString(5), rs.getString(6)});
+            }
+            modelo.setRowCount(11);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelDevolver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void cargarClientes() {
+        String sql = "SELECT c.ID, c.`Nombre`, c.`Edad`, c.`Deuda`, c.`FechaDevolucion`, v.`Nombre` "
+                + "as Vehículo FROM cliente c INNER JOIN vehiculo v on c.`ID_Vehiculo`=v.id";
+        
+        try {
+            PreparedStatement pst = VentanaLogin.con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            modelo.setRowCount(0);
+            while (rs.next()) {                
+                modelo.addRow(new String[]{rs.getString(1), rs.getString(2), rs.getString(3), 
+                rs.getString(4), rs.getString(5), rs.getString(6)});
+            }
+            modelo.setRowCount(11);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelDevolver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void borrarCliente (int id){
+        String sql = "DELETE FROM cliente WHERE ID = "+id;
+        
+        try {
+            PreparedStatement pst = VentanaLogin.con.prepareStatement(sql);
+            pst.execute(sql);
+            modelo.setRowCount(11);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelDevolver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+//  private void setDisponibleVehiculo() {
+//      String sql = "UPDATE vehiculo SET Disponibilidad = 'Disponible' WHERE id = 4";
+//      try {
+//          PreparedStatement pst = VentanaLogin.con.prepareStatement(sql);
+//          pst.execute();
+//      } catch (SQLException ex) {
+//          Logger.getLogger(PanelDevolver.class.getName()).log(Level.SEVERE, null, ex);
+//      }
+//  }
+    
+    private void setTransicionVehiculo() {
+        String sql = "UPDATE vehiculo SET Disponibilidad = 'Transicion' WHERE id = 4";
+        try {
+            PreparedStatement pst = VentanaLogin.con.prepareStatement(sql);
+            pst.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelDevolver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void calcularValorTotal(int tarifa, int fila) {
+        java.sql.Date fechaActual = new java.sql.Date(Date.valueOf(LocalDate.now()).getTime());
+        java.sql.Date fechaDevolucion = java.sql.Date.valueOf((String)modelo.getValueAt(fila, 4));
+        if (fechaActual.compareTo(fechaDevolucion) > 0) {
+            jTextField2.setText("$"+tarifa+(calcularDias(fechaActual, fechaDevolucion))*7000);
+        }
+        else {
+            jTextField2.setText("$"+((tarifa*0.19)+tarifa));
+        }
+    }
+    
+    private int calcularDias(java.sql.Date fechaActual, java.sql.Date fechaDevolucion) {
+        int dias;
+        long d = fechaActual.getTime();
+    //  java.sql.Date fecha =new java.sql.Date(d);
+        //System.out.println("Fecha es"+fecha);
+
+        long d2 = fechaDevolucion.getTime();
+    //  java.sql.Date fecha2 =new java.sql.Date(d2);
+        //System.out.println("\nFecha es"+fecha2);
+        //GUARDAR FECHA2 BASE DE DATOS CLIENTE
+
+        long tiempo=Math.abs(d2-d);
+        long conv= TimeUnit.DAYS.convert(tiempo,TimeUnit.MILLISECONDS);
+        dias=(int)conv;
+        return(dias);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+    * WARNING: Do NOT modify this code. The content of this method is always
+    * regenerated by the Form Editor.
+    */
+//  @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        btnPagar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        btnBuscar = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("Lista de Clientes");
+
+        jLabel1.setText("Ingrese Nº Pedido");
+
+        jLabel3.setText("Valor Total");
+
+        jTextField2.setEditable(false);
+
+        btnPagar.setBackground(new java.awt.Color(204, 204, 204));
+        btnPagar.setText("Pagar");
+        btnPagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarActionPerformed(evt);
+            }
+        });
+
+        btnLimpiar.setBackground(new java.awt.Color(204, 204, 204));
+        btnLimpiar.setText("Restablecer");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Nombre", "Edad", "Deuda", "Fecha Devolución", "Vehículo"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTable2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTable2.getTableHeader().setReorderingAllowed(false);
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTable2);
+
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2))
+                        .addContainerGap(315, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnBuscar))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 57, Short.MAX_VALUE))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel2)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        jTextField1.setText("");
+        jTextField2.setText("$");
+        cargarClientes();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        buscarPedido(Integer.parseInt(jTextField1.getText()));
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
+        if (modelo.getValueAt(jTable2.getSelectedRow(), 0) == null) {
+            JOptionPane.showMessageDialog(null, "No existe un cliente", "Pago", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            int n = JOptionPane.showConfirmDialog(null, "¿Desea pagar "+jTextField2.getText()+"?", "Pago", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (n == 0) {
+                JOptionPane.showMessageDialog(null, "El cliente "+modelo.getValueAt(jTable2.getSelectedRow(), 1)+" ya no presenta deuda", "Pago", JOptionPane.INFORMATION_MESSAGE);
+                borrarCliente(Integer.parseInt((String) modelo.getValueAt(jTable2.getSelectedRow(), 0)));
+                setTransicionVehiculo();
+                //setDisponibleVehiculo();
+                cargarClientes();
+            }
+        }
+
+    }//GEN-LAST:event_btnPagarActionPerformed
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        //System.out.println(Integer.parseInt((String) modelo.getValueAt(jTable2.getSelectedRow(), 3))*0.19+Integer.parseInt((String) modelo.getValueAt(jTable2.getSelectedRow(), 3)));
+        calcularValorTotal(Integer.parseInt((String) modelo.getValueAt(jTable2.getSelectedRow(), 3)), jTable2.getSelectedRow());
+    }//GEN-LAST:event_jTable2MouseClicked
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnPagar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    // End of variables declaration//GEN-END:variables
+}
+
