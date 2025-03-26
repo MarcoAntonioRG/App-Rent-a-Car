@@ -4,7 +4,7 @@ Una aplicación de escritorio para arrendar o alquilar vehículos.
 
 ## Como ejecutar
 
-1. Para utilizar la aplicación se debe tener instalado el JDK desde la versión 21 y Maven.
+1. Para utilizar la aplicación se debe tener instalado el JDK desde la versión 21, Maven y Docker.
 
 2. Se utiliza una base de datos en MySQL mediante un contenedor, basta con correrlo desde la carpeta raíz mediante `docker-compose up`. La otra alternativa sería utilizar una base de datos local.
 
