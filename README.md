@@ -2,15 +2,11 @@
 
 Una aplicación de escritorio para arrendar o alquilar vehículos.
 
----
-
 ## **Tecnologías Usadas**
 - Java para la creación de la aplicación
 - Maven para la construcción del proyecto
 - MySQL para la base de datos
 - Docker para la contenerización de la base de datos
-
----
 
 ## **Requisitos Técnicos**
 
@@ -19,13 +15,9 @@ Para ejecutar la aplicación son necesarios tener instalados los siguientes requ
 - JDK 21 para ejecutar y visualizar la GUI de la aplicación.
 - Docker para la ejecución de la base de datos que se utilizará.
 
----
-
 ## **Descripción**
 
 Esta aplicación permite ingresar a ésta mediante un login donde se introduzen las credenciales que se encuentren almacenadas en la tabla `admin` de la base de datos, para luego mostrar la interfaz gráfica en donde se podrá seleccionar la ventana para arrendar vehículos que se encuentren disponibles rellenando todos los datos necesarios, y una ventana para cuando el cliente quiera devolver el vehículo prestado.
-
----
 
 ## **Pasos para ejecutar**
 
